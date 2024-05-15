@@ -1,0 +1,19 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="inputHeight">56dp</dimen>
+    <!-- General -->
+    <dimen name="dimen_XLarge">42dp</dimen>
+    <dimen name="dimen_large">32dp</dimen>
+    <dimen name="dimen_medium">16dp</dimen>
+    <dimen name="dimen_small">8dp</dimen>
+    <dimen name="dimen_XSmall">6dp</dimen>
+    <!-- Images -->
+    <dimen name="contact_img_size">50dp</dimen>
+    <dimen name="contact_add_img_size">150dp</dimen>
+    <!-- Text -->
+    <dimen name="textSmall">12sp</dimen>
+    <dimen name="textMedium">14sp</dimen>
+    <dimen name="textLarge">16sp</dimen>
+    <dimen name="textTitle">18sp</dimen>
+    <dimen name="textSubtitle">17sp</dimen>
+</resources>

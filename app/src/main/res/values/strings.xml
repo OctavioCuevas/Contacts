@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Contacts</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="contact_list_title">Lista de contactos</string>
+    <string name="contact_list_item_age_and_gender">%s (%d años)</string>
+    <string name="contact_image">Imagen de contacto</string>
+    <string name="contact_delete">Eliminar contacto</string>
+    <string name="contact_add">Agregar Contacto</string>
+    <string name="contact_form_add_contact_title">Agregar contacto</string>
+    <string name="contact_form_update_contact_title">Modificar contacto</string>
+    <string name="contact_form_name_hint">Nombre</string>
+    <string name="contact_form_last_name_hint">Apellido paterno</string>
+    <string name="contact_form_mother_last_name_hint">Apellido materno</string>
+    <string name="contact_form_age_hint">Edad</string>
+    <string name="contact_form_phone_hint">Teléfono</string>
+    <string name="contact_form_button_text">Guardar</string>
+    <string name="contact_form_add_photo">Agregar foto</string>
+    <string name="contact_photo_select">Seleccionar de la galería</string>
+    <string name="contact_photo_take">Tomar foto</string>
+    <string name="contact_missing_data_error">Este campo es requerido</string>
+</resources>

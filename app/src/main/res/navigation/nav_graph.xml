@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/contact_list">
+
+    <fragment
+        android:id="@+id/contact_list"
+        android:name="com.mx.crystalcloud.contactsgs.ui.contactList.ContactListScreen"
+        android:label="@string/contact_list_title"
+        tools:layout="@layout/contact_list_screen">
+        <action
+            android:id="@+id/action_contact_list_to_contact_form"
+            app:destination="@id/contact_form" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/contact_form"
+        android:name="com.mx.crystalcloud.contactsgs.ui.contactForm.ContactFormScreen"
+        android:label="@string/contact_form_add_contact_title"
+        tools:layout="@layout/contact_form_screen">
+        <action
+            android:id="@+id/action_contact_form_to_contact_list"
+            app:destination="@id/contact_list"
+            app:popUpTo="@id/contact_form"
+            app:popUpToInclusive="true"  />
+    </fragment>
+</navigation>
