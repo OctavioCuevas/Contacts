@@ -25,9 +25,9 @@ class ContactListAdapter(private val dataList: List<Contact>, private val navCon
 
         holder.itemView.setOnClickListener {
             val bundle = Bundle().apply {
-                // putParcelable("contact", dataList[position])
+                putParcelable(B_CONTACT, dataList[position])
             }
-            navController.navigate(R.id.action_contact_list_to_contact_form, )
+            navController.navigate(R.id.action_contact_list_to_contact_form, bundle)
         }
     }
 
@@ -39,7 +39,7 @@ class ContactListAdapter(private val dataList: List<Contact>, private val navCon
         private val context = itemView.context
 
         fun bind(item: Contact) = with(binding) {
-            contactName.text = item.name
+            contactName.text = context.getString(R.string.contact_list_item_full_name, item.name, item.lastName, item.motherLastName)
             if (item.age != null) {
                 contactAgeAndGender.text = context.getString(R.string.contact_list_item_age_and_gender, item.gender, item.age)
             } else {
@@ -56,6 +56,8 @@ class ContactListAdapter(private val dataList: List<Contact>, private val navCon
                 Log.e("cct", "eliminar")
             }
         }
-
+    }
+    companion object {
+        const val B_CONTACT = "contact"
     }
 }

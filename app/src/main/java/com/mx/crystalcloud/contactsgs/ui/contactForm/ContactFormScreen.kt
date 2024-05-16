@@ -8,7 +8,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -23,15 +22,17 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.appbar.MaterialToolbar
 import com.mx.crystalcloud.contactsgs.R
+import com.mx.crystalcloud.contactsgs.database.Contact
 import com.mx.crystalcloud.contactsgs.databinding.ContactFormScreenBinding
 import kotlinx.coroutines.launch
 
-class ContactFormScreen : Fragment(), ContactView {
+class ContactFormScreen : Fragment(), ContactFormView {
     private var _binding: ContactFormScreenBinding? = null
 
     private val binding get() = _binding!!
-    private lateinit var presenter: ContactPresenter
+    private lateinit var presenter: ContactFormPresenter
 
     private val takePictureLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -57,7 +58,7 @@ class ContactFormScreen : Fragment(), ContactView {
         savedInstanceState: Bundle?,
     ): View {
         _binding = ContactFormScreenBinding.inflate(inflater, container, false)
-        presenter = ContactPresenter(this)
+        presenter = ContactFormPresenter(this)
         return binding.root
     }
 
@@ -79,8 +80,12 @@ class ContactFormScreen : Fragment(), ContactView {
     }
 
     override fun backToContactList() {
-        findNavController().navigate(R.id.action_contact_form_to_contact_list)
-        findNavController().popBackStack()
+        val navController = findNavController()
+        val currentDestinationId = navController.currentDestination?.id
+        if (currentDestinationId != null && navController.graph.findNode(currentDestinationId) != null) {
+            navController.popBackStack(currentDestinationId, false)
+        }
+        navController.navigate(R.id.action_contact_form_to_contact_list)
     }
 
     override fun setSelectedPhoto(imageUri: Uri) = with(binding.contactPhoto) {
@@ -98,6 +103,33 @@ class ContactFormScreen : Fragment(), ContactView {
         }
     }
 
+    override fun setContactData(contact: Contact) = with(binding) {
+        with(contact) {
+            nameEditText.setText(name)
+            lastNameEditText.setText(lastName)
+            motherLastNameEditText.setText(motherLastName)
+            ageEditText.setText(age?.toString())
+            phoneEditText.setText(phone)
+        }
+    }
+
+    override fun setScreenStrings(isNewContact: Boolean) {
+        val title = getString(
+            if (isNewContact) R.string.contact_form_add_contact_title
+            else R.string.contact_form_update_contact_title
+        )
+        val buttonText = getString(
+            if (isNewContact) R.string.contact_form_button_text_new
+            else R.string.contact_form_button_text_old
+        )
+
+        val toolbar: MaterialToolbar? = activity?.findViewById(R.id.toolbar)
+        toolbar?.let {
+            it.title = title
+        }
+        binding.saveContactButton.text = buttonText
+    }
+
     override fun setTakenPhoto(imageBitmap: Bitmap) = with(binding.contactPhoto) {
         setImageBitmap(imageBitmap)
     }
@@ -107,14 +139,6 @@ class ContactFormScreen : Fragment(), ContactView {
 
         saveContactButton.setOnClickListener {
             lifecycleScope.launch {
-                if (ContextCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-
-                    Log.e("Cct", "nosta")
-                }
                 presenter.formButtonClicked(
                     requireContext(),
                     nameEditText.text,
@@ -156,6 +180,8 @@ class ContactFormScreen : Fragment(), ContactView {
         phoneEditText.doOnTextChanged { _, _, _, _ ->
             phoneLayout.isErrorEnabled = false
         }
+
+        presenter.setContact(arguments)
     }
 
     private fun showPopupMenu() {
@@ -185,14 +211,12 @@ class ContactFormScreen : Fragment(), ContactView {
                 Manifest.permission.CAMERA,
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            Log.e("cct", "solicitar permisos")
             ActivityCompat.requestPermissions(
                 requireActivity(),
                 arrayOf(Manifest.permission.CAMERA),
                 PERMISSIONS_REQUEST_CODE,
             )
         } else {
-            Log.e("cct", "permisos dados")
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             takePictureLauncher.launch(takePictureIntent)
         }

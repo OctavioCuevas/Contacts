@@ -3,6 +3,8 @@
     <!-- Strings used for fragments for navigation -->
     <string name="contact_list_title">Lista de contactos</string>
     <string name="contact_list_item_age_and_gender">%s (%d años)</string>
+    <string name="contact_list_item_full_name">%s %s %s</string>
+    <string name="contact_list_order_by_text">Ordenar por</string>
     <string name="contact_image">Imagen de contacto</string>
     <string name="contact_delete">Eliminar contacto</string>
     <string name="contact_add">Agregar Contacto</string>
@@ -13,7 +15,8 @@
     <string name="contact_form_mother_last_name_hint">Apellido materno</string>
     <string name="contact_form_age_hint">Edad</string>
     <string name="contact_form_phone_hint">Teléfono</string>
-    <string name="contact_form_button_text">Guardar</string>
+    <string name="contact_form_button_text_new">Guardar</string>
+    <string name="contact_form_button_text_old">Actualizar</string>
     <string name="contact_form_add_photo">Agregar foto</string>
     <string name="contact_photo_select">Seleccionar de la galería</string>
     <string name="contact_photo_take">Tomar foto</string>

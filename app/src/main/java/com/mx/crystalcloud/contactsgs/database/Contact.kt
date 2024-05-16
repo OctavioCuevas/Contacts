@@ -1,7 +1,10 @@
 package com.mx.crystalcloud.contactsgs.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "contacts")
 data class Contact(
     @PrimaryKey(autoGenerate = true)
@@ -13,4 +16,4 @@ data class Contact(
     val phone: String,
     val gender: String?,
     val photo: String?,
-)
+) : Parcelable

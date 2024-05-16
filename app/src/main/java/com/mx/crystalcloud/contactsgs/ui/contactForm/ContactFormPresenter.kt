@@ -9,9 +9,9 @@ import android.os.Environment
 import android.text.Editable
 import android.util.Log
 import android.widget.ArrayAdapter
-import com.mx.crystalcloud.contactsgs.MainActivity
 import com.mx.crystalcloud.contactsgs.database.Contact
 import com.mx.crystalcloud.contactsgs.database.ContactsDatabase
+import com.mx.crystalcloud.contactsgs.ui.contactList.ContactListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,10 +21,12 @@ import java.io.IOException
 import java.io.OutputStream
 import java.util.UUID
 
-class ContactPresenter(private val view: ContactView) {
+class ContactFormPresenter(private val view: ContactFormView) {
     private var selectedImageUri: Uri? = null
     private var selectedGender: String? = null
     private var genderOptions = listOf("Hombre", "Mujer")
+    private var isNewContact = true
+    private var contactId = 0
 
     fun formButtonClicked(
         context: Context,
@@ -48,23 +50,26 @@ class ContactPresenter(private val view: ContactView) {
             formFilled = false
         }
         if (formFilled) {
-            val contactAge =
-                age?.toString()?.let {
-                    if (it.isNotEmpty()) it.toInt() else null
-                }
-            val contact =
-                Contact(
-                    name = name.toString(),
-                    lastName = lastName.toString(),
-                    motherLastName =  motherLastName.toString(),
-                    age = contactAge,
-                    phone = phone.toString(),
-                    gender = selectedGender,
-                    photo = selectedImageUri?.path,
-                )
+            val contactAge = age?.toString()?.let {
+                if (it.isNotEmpty()) it.toInt() else null
+            }
+            val contact = Contact(
+                contactId,
+                name = name.toString(),
+                lastName = lastName.toString(),
+                motherLastName = motherLastName.toString(),
+                age = contactAge,
+                phone = phone.toString(),
+                gender = selectedGender,
+                photo = selectedImageUri?.path,
+            )
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    ContactsDatabase.getInstance(context).contactsDao.insertContact(contact)
+                    if (isNewContact) {
+                        ContactsDatabase.getInstance(context).contactsDao.insertContact(contact)
+                    } else {
+                        ContactsDatabase.getInstance(context).contactsDao.updateContact(contact)
+                    }
                     view.backToContactList()
                 } catch (e: Exception) {
                     Log.e("cct", "ocurrió error al insertar: " + e.message)
@@ -117,6 +122,18 @@ class ContactPresenter(private val view: ContactView) {
             return null
         }
         return Uri.parse(imageFile.absolutePath)
+    }
+
+    fun setContact(args: Bundle?) {
+        args?.let {
+            val receivedContact = it.getParcelable<Contact>(ContactListAdapter.B_CONTACT)
+            receivedContact?.let { contact ->
+                view.setContactData(contact)
+                contactId = contact.id
+                isNewContact = false
+            }
+        }
+        view.setScreenStrings(isNewContact)
     }
 
     companion object {
