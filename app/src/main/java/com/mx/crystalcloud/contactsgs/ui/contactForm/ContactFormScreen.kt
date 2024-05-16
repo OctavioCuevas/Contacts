@@ -185,12 +185,14 @@ class ContactFormScreen : Fragment(), ContactView {
                 Manifest.permission.CAMERA,
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            Log.e("cct", "solicitar permisos")
             ActivityCompat.requestPermissions(
                 requireActivity(),
                 arrayOf(Manifest.permission.CAMERA),
                 PERMISSIONS_REQUEST_CODE,
             )
         } else {
+            Log.e("cct", "permisos dados")
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
             takePictureLauncher.launch(takePictureIntent)
         }
